@@ -16,7 +16,5 @@ class ImageRepository(IImageRepository):
             with self.db as session:
                 with session.begin():
                     session.add(image)
-                    # await session.flush()
-                    # await session.commit()
         except SQLAlchemyError as e:
             logger.error(e)
