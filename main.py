@@ -20,7 +20,7 @@ def fetch_images(image_service: ImageService):
     try:
         logger.debug(f"Start {thread_name} thread")
         image_service.fetch_images()
-        logger.debug("Complete {thread_name} task")
+        logger.debug(f"Complete {thread_name} task")
     except Exception as e:
         logger.error(f"Error in {thread_name}: {e}")
 
