@@ -1,0 +1,8 @@
+psycopg2==2.9.9
+SQLAlchemy==2.0.31
+python-dotenv==1.0.1
+loguru==0.7.2
+alembic==1.13.2
+minio==7.2.7
+redis==5.0.7
+greenlet==3.0.3

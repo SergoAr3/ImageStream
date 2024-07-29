@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6380:6379"
+    environment:
+      - REDIS_PASSWORD=sergo
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=0
+
+  db:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "image_stream"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "sergo"
+
+  minio:
+    image: minio/minio
+    restart: always
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: "sergo"
+      MINIO_ROOT_PASSWORD: "ser060702"
+    command: server /data --console-address ":9001"
+
+  src:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+      - minio
+    ports:
+      - "8000:8000"
+
+
+
