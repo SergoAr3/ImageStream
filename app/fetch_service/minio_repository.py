@@ -1,13 +1,8 @@
-import asyncio
-import json
-
 from loguru import logger
 from minio import Minio
 
-from src.core.repositories.minio_repo import IMinioRepository
 
-
-class MinioRepository(IMinioRepository):
+class MinioRepository:
 
     def __init__(self, minio_client: Minio, bucket: str):
         self.client = minio_client
@@ -16,7 +11,6 @@ class MinioRepository(IMinioRepository):
     def get_object(self, object_name):
         try:
             obj = self.client.get_object(bucket_name=self.bucket_name, object_name=object_name)
-
             return obj
         except Exception as e:
             logger.error(e)

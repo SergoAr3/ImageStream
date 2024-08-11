@@ -1,38 +1,24 @@
-from threading import Thread, Timer, current_thread
-from loguru import logger
-from src.core.services.image_service import ImageService
-from src.service_provider import get_image_service
+from threading import Thread, Timer
 
-
-def get_images(image_service: ImageService):
-    thread_name = current_thread().name
-
-    try:
-        logger.debug(f"Start {thread_name} thread")
-        image_service.get_images()
-        logger.debug(f"Complete {thread_name} task")
-    except Exception as e:
-        logger.error(f"Error in {thread_name}: {e}")
-
-
-def fetch_images(image_service: ImageService):
-    thread_name = current_thread().name
-    try:
-        logger.debug(f"Start {thread_name} thread")
-        image_service.fetch_images()
-        logger.debug(f"Complete {thread_name} task")
-    except Exception as e:
-        logger.error(f"Error in {thread_name}: {e}")
+from app.fetch_service.app import fetch_and_enqueue_images
+from app.storage_service.app import dequeue_and_save_images
 
 
 def main(func1, func2):
-    image_service = get_image_service()
-    thr_1 = Thread(target=func1, args=(image_service,), name='fetch_images')
-    thr_2 = Timer(1, func2, args=(image_service,))
-    get_images.name = 'get_images'
-    thr_1.start()
-    thr_2.start()
+    func1_thr1 = Thread(target=func1, name=func1.__name__)
+    func1_thr2 = Thread(target=func1, name=func1.__name__)
+
+    func2_thr1 = Timer(1, func2)
+    func2_thr2 = Timer(1, func2)
+    func2_thr1.name = func2.__name__
+    func2_thr2.name = func2.__name__
+
+    func1_thr1.start()
+    func1_thr2.start()
+
+    func2_thr1.start()
+    func2_thr2.start()
 
 
 if __name__ == '__main__':
-    main(fetch_images, get_images)
+    main(fetch_and_enqueue_images, dequeue_and_save_images)
